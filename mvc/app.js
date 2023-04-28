@@ -457,12 +457,7 @@ const app = {
     const checkRadioBtn = document.querySelectorAll(
       'input[name="subscription"]'
     );
-    checkRadioBtn.forEach((input) => {
-      if (input.id === app.currentUserInfo.plan.type.id) {
-        input.setAttribute("checked", "true");
-      }
-    });
-    console.log(app.currentUserInfo.plan.yearOrMonth);
+    checkRadioBtn[0].setAttribute("checked", "true");
   },
 
   init() {
