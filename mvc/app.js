@@ -386,6 +386,7 @@ const app = {
     const btnChange = document.querySelector("#change");
     btnChange.addEventListener("click", (e) => {
       const form2Com = app.htmlForm2Comp(app.data.form2.selecetedForm2Plan);
+      app.$.form.innerHTML = app.htmlForm2(form2Com);
       const checkRadioBtn = document.querySelectorAll(
         'input[name="subscription"]'
       );
@@ -394,7 +395,6 @@ const app = {
           input.setAttribute("checked", "true");
         }
       });
-      app.$.form.innerHTML = app.htmlForm2(form2Com);
       document.querySelector("#btn-form").textContent = "Next step";
       app.state.currentForm = "form2";
       const btnTgleMY = document.querySelector(".toggle-mon-yr div");
