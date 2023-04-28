@@ -27,6 +27,73 @@ const app = {
     },
   },
 
+  subsTime: {
+    month: [
+      {
+        type: "arcade",
+        fee: 9,
+        fre: "month",
+      },
+      {
+        type: "advanced",
+        fee: 12,
+        fre: "month",
+      },
+      {
+        type: "pro",
+        fee: 15,
+        fre: "month",
+      },
+    ],
+    year: [
+      {
+        type: "arcade",
+        fee: 90,
+        fre: "year",
+        exp: `2 months free`,
+      },
+      {
+        type: "advanced",
+        fee: 12,
+        fre: "year",
+        exp: `2 months free`,
+      },
+      {
+        type: "pro",
+        fee: 15,
+        fre: "year",
+        exp: `2 months free`,
+      },
+    ],
+  },
+
+  AddsOn: {
+    month: {
+      onlineServ: {
+        value: 1,
+      },
+      largeSto: {
+        value: 2,
+      },
+      customizable: {
+        value: 2,
+      },
+      exp: "mo",
+    },
+    year: {
+      onlineServ: {
+        value: 10,
+      },
+      largeSto: {
+        value: 20,
+      },
+      customizable: {
+        value: 20,
+      },
+      exp: "yr",
+    },
+  },
+
   htmlForm1({ name, email, phone }) {
     return `<caption>
     <h2>Personal Info</h2>
@@ -191,73 +258,6 @@ const app = {
       </div>`;
       })
       .join("");
-  },
-
-  subsTime: {
-    month: [
-      {
-        type: "arcade",
-        fee: 9,
-        fre: "month",
-      },
-      {
-        type: "advanced",
-        fee: 12,
-        fre: "month",
-      },
-      {
-        type: "pro",
-        fee: 15,
-        fre: "month",
-      },
-    ],
-    year: [
-      {
-        type: "arcade",
-        fee: 90,
-        fre: "year",
-        exp: `2 months free`,
-      },
-      {
-        type: "advanced",
-        fee: 12,
-        fre: "year",
-        exp: `2 months free`,
-      },
-      {
-        type: "pro",
-        fee: 15,
-        fre: "year",
-        exp: `2 months free`,
-      },
-    ],
-  },
-
-  AddsOn: {
-    month: {
-      onlineServ: {
-        value: 1,
-      },
-      largeSto: {
-        value: 2,
-      },
-      customizable: {
-        value: 2,
-      },
-      exp: "mo",
-    },
-    year: {
-      onlineServ: {
-        value: 10,
-      },
-      largeSto: {
-        value: 20,
-      },
-      customizable: {
-        value: 20,
-      },
-      exp: "yr",
-    },
   },
 
   stepOne(e) {
