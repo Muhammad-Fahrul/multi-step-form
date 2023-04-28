@@ -10,12 +10,50 @@ const app = {
     currentForm: `form1`,
   },
 
-  data: {
-    form1: {
-      name: null,
-      email: null,
-      phone: null,
+  // pricing
+  pricing: {
+    monthly: {
+      plan: {
+        arcade: "9",
+        advanced: "12",
+        pro: "15",
+      },
+      addOns: {
+        onlineService: "1",
+        largerStorage: "2",
+        customizableProfile: "2",
+      },
     },
+    yearly: {
+      plan: {
+        arcade: "90",
+        advanced: "120",
+        pro: "150",
+      },
+      addOns: {
+        onlineService: "10",
+        largerStorage: "20",
+        customizableProfile: "20",
+      },
+    },
+  },
+
+  // initial current user data
+  currentUserInfo: {
+    id: crypto.randomUUID(),
+    name: "",
+    email: "",
+    phone: "",
+    plan: {
+      type: {
+        id: "arcade",
+      },
+      yearOrMonth: "",
+    },
+    addOns: [],
+  },
+
+  data: {
     form2: {
       plan: null,
       yearOrMonth: null,
@@ -262,38 +300,58 @@ const app = {
 
   stepOne(e) {
     // store first step data
-    app.data.form1.name = e.target.querySelector('input[name="name"]').value;
-    app.data.form1.email = e.target.querySelector('input[name="email"]').value;
-    app.data.form1.phone = e.target.querySelector('input[name="phone"]').value;
+    app.currentUserInfo.name =
+      e.target.querySelector('input[name="name"]').value;
+    app.currentUserInfo.email = e.target.querySelector(
+      'input[name="email"]'
+    ).value;
+    app.currentUserInfo.phone = e.target.querySelector(
+      'input[name="phone"]'
+    ).value;
 
     // rendering html and all functionality
-    app.data.form2.yearOrMonth = app.subsTime.month; // default value
+    app.data.form2.selecetedForm2Plan = app.subsTime.month; // default value
+    app.data.form2.yearOrMonth = "month";
+    app.data.form3.addsOns = app.AddsOn.month;
     e.target.innerHTML = app.htmlForm2(app.htmlForm2Comp(app.subsTime.month));
+    const checkRadioBtn = document.querySelectorAll(
+      'input[name="subscription"]'
+    );
+    checkRadioBtn.forEach((input) => {
+      if (input.id === app.currentUserInfo.plan.type.id) {
+        input.setAttribute("checked", "true");
+      }
+    });
     const btnTgleMY = document.querySelector(".toggle-mon-yr div");
     btnTgleMY.addEventListener("click", () => app.handlerToggleMy(btnTgleMY));
     app.$.btnNext.insertAdjacentElement("afterend", app.$.btnBack);
   },
 
   stepTwo(e) {
-    app.data.form2.plan =
-      document.querySelector('input[name="subscription"]:checked') || null;
-    if (app.data.form2.plan === null) {
-      alert("please");
-      return;
-    }
+    app.currentUserInfo.plan.type = document.querySelector(
+      'input[name="subscription"]:checked'
+    );
     e.target.innerHTML = app.htmlForm3(app.data.form3.addsOns);
+    const checkedInput = document.querySelectorAll('input[name="add-ons"]');
+    checkedInput.forEach((input) => {
+      app.currentUserInfo.addOns.forEach((el) => {
+        if (input.id === el.id) {
+          input.setAttribute("checked", "true");
+        }
+      });
+    });
   },
 
   stepThree(e) {
     // check validity
-    app.data.form3.selectedAdds =
+    app.currentUserInfo.addOns =
       [...document.querySelectorAll('input[name="add-ons"]:checked')] || [];
-    if (app.data.form3.selectedAdds.length < 1) {
+    if (app.currentUserInfo.addOns.length < 1) {
       alert("centang minimal satu");
       return;
     }
 
-    const adds = app.data.form3.selectedAdds.map((item) => {
+    const adds = app.currentUserInfo.addOns.map((item) => {
       return {
         type: item.id,
         fee: item.value,
@@ -304,11 +362,13 @@ const app = {
     const addOns = app.htmlAddsOn(adds);
 
     const props = {
-      type: app.data.form2.plan.id,
-      fee: app.data.form2.plan.defaultValue,
+      type: app.currentUserInfo.plan.type.id,
+      fee: app.currentUserInfo.plan.type.defaultValue,
       fre: app.data.form3.addsOns.exp,
       freq: app.data.form3.addsOns.exp === "mo" ? "monthly" : "yearly",
     };
+
+    console.log(app.currentUserInfo);
 
     const total =
       adds
@@ -326,12 +386,20 @@ const app = {
     const btnChange = document.querySelector("#change");
     btnChange.addEventListener("click", (e) => {
       const form2Com = app.htmlForm2Comp(app.data.form2.selecetedForm2Plan);
+      const checkRadioBtn = document.querySelectorAll(
+        'input[name="subscription"]'
+      );
+      checkRadioBtn.forEach((input) => {
+        if (input.id === app.currentUserInfo.plan.type.id) {
+          input.setAttribute("checked", "true");
+        }
+      });
       app.$.form.innerHTML = app.htmlForm2(form2Com);
       document.querySelector("#btn-form").textContent = "Next step";
       app.state.currentForm = "form2";
       const btnTgleMY = document.querySelector(".toggle-mon-yr div");
       const span = btnTgleMY.querySelector("span").classList;
-      app.data.form2.yearOrMonth === "year"
+      app.currentUserInfo.plan.yearOrMonth === "year"
         ? span.add("end-content")
         : span.remove("end-content");
       btnTgleMY.addEventListener("click", () => app.handlerToggleMy(btnTgleMY));
@@ -387,15 +455,29 @@ const app = {
       console.log(app.state.currentForm);
       switch (app.state.currentForm) {
         case "form2":
+          app.currentUserInfo.plan.type = document.querySelector(
+            'input[name="subscription"]:checked'
+          );
           app.state.currentForm = "form1";
-          app.$.form.innerHTML = app.htmlForm1(app.data.form1);
+          app.$.form.innerHTML = app.htmlForm1(app.currentUserInfo);
           e.target.remove();
           break;
         case "form3":
+          app.currentUserInfo.addOns =
+            [...document.querySelectorAll('input[name="add-ons"]:checked')] ||
+            [];
           app.state.currentForm = "form2";
           app.$.form.innerHTML = app.htmlForm2(
             app.htmlForm2Comp(app.data.form2.selecetedForm2Plan)
           );
+          const checkRadioBtn = document.querySelectorAll(
+            'input[name="subscription"]'
+          );
+          checkRadioBtn.forEach((input) => {
+            if (input.id === app.currentUserInfo.plan.type.id) {
+              input.setAttribute("checked", "true");
+            }
+          });
           const btnTgleMY = document.querySelector(".toggle-mon-yr div");
           const span = btnTgleMY.querySelector("span").classList;
           app.data.form2.yearOrMonth === "year"
@@ -408,6 +490,16 @@ const app = {
         case "form4":
           app.state.currentForm = "form3";
           app.$.form.innerHTML = app.htmlForm3(app.data.form3.addsOns);
+          const checkedInput = document.querySelectorAll(
+            'input[name="add-ons"]'
+          );
+          checkedInput.forEach((input) => {
+            app.currentUserInfo.addOns.forEach((el) => {
+              if (input.id === el.id) {
+                input.setAttribute("checked", "true");
+              }
+            });
+          });
           document.querySelector("#btn-form").textContent = "Next step";
           break;
       }
