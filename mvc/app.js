@@ -4,7 +4,27 @@ const app = {
     btn: document.querySelector(".btn"),
     btnNext: document.querySelector("#btn-form"),
     btnBack: document.createElement("label"),
-    btnMonYea: null,
+  },
+
+  state: {
+    currentForm: `form1`,
+  },
+
+  data: {
+    form1: {
+      name: null,
+      email: null,
+      phone: null,
+    },
+    form2: {
+      plan: null,
+      yearOrMonth: null,
+      selecetedForm2Plan: null,
+    },
+    form3: {
+      addsOns: null,
+      selectedAdds: null,
+    },
   },
 
   htmlForm1({ name, email, phone }) {
@@ -173,7 +193,7 @@ const app = {
       .join("");
   },
 
-  dataYearMonth: {
+  subsTime: {
     month: [
       {
         type: "arcade",
@@ -213,7 +233,7 @@ const app = {
     ],
   },
 
-  dataAddsOn: {
+  AddsOn: {
     month: {
       onlineServ: {
         value: 1,
@@ -240,152 +260,127 @@ const app = {
     },
   },
 
-  state: {
-    currentForm: `form1`,
-    currentForm2Comp: null,
-    infoPerSeq: {
-      form1: {},
-      form2: {
-        plan: "",
-      },
-      form3: {
-        addOns: null,
-        adds: null,
-        backInfo: null,
-      },
-      form4: {},
-    },
+  stepOne(e) {
+    // store first step data
+    app.data.form1.name = e.target.querySelector('input[name="name"]').value;
+    app.data.form1.email = e.target.querySelector('input[name="email"]').value;
+    app.data.form1.phone = e.target.querySelector('input[name="phone"]').value;
+
+    // rendering html and all functionality
+    app.data.form2.yearOrMonth = app.subsTime.month; // default value
+    e.target.innerHTML = app.htmlForm2(app.htmlForm2Comp(app.subsTime.month));
+    const btnTgleMY = document.querySelector(".toggle-mon-yr div");
+    btnTgleMY.addEventListener("click", () => app.handlerToggleMy(btnTgleMY));
+    app.$.btnNext.insertAdjacentElement("afterend", app.$.btnBack);
+  },
+
+  stepTwo(e) {
+    app.data.form2.plan =
+      document.querySelector('input[name="subscription"]:checked') || null;
+    if (app.data.form2.plan === null) {
+      alert("please");
+      return;
+    }
+    e.target.innerHTML = app.htmlForm3(app.data.form3.addsOns);
+  },
+
+  stepThree(e) {
+    // check validity
+    app.data.form3.selectedAdds =
+      [...document.querySelectorAll('input[name="add-ons"]:checked')] || [];
+    if (app.data.form3.selectedAdds.length < 1) {
+      alert("centang minimal satu");
+      return;
+    }
+
+    const adds = app.data.form3.selectedAdds.map((item) => {
+      return {
+        type: item.id,
+        fee: item.value,
+        fre: app.data.form3.addsOns.exp,
+      };
+    });
+
+    const addOns = app.htmlAddsOn(adds);
+
+    const props = {
+      type: app.data.form2.plan.id,
+      fee: app.data.form2.plan.defaultValue,
+      fre: app.data.form3.addsOns.exp,
+      freq: app.data.form3.addsOns.exp === "mo" ? "monthly" : "yearly",
+    };
+
+    const total =
+      adds
+        .map((item) => {
+          return item.fee;
+        })
+        .reduce((total, num) => {
+          return +total + +num;
+        }, 0) + +props.fee;
+    e.target.innerHTML = app.htmlForm4(props, addOns, total);
+
+    // rendering html and all functionality
+    document.querySelector("#btn-form").textContent = "Confirm";
+    // change btn
+    const btnChange = document.querySelector("#change");
+    btnChange.addEventListener("click", (e) => {
+      const form2Com = app.htmlForm2Comp(app.data.form2.selecetedForm2Plan);
+      app.$.form.innerHTML = app.htmlForm2(form2Com);
+      document.querySelector("#btn-form").textContent = "Next step";
+      app.state.currentForm = "form2";
+      const btnTgleMY = document.querySelector(".toggle-mon-yr div");
+      const span = btnTgleMY.querySelector("span").classList;
+      app.data.form2.yearOrMonth === "year"
+        ? span.add("end-content")
+        : span.remove("end-content");
+      btnTgleMY.addEventListener("click", () => app.handlerToggleMy(btnTgleMY));
+    });
   },
 
   handlerToggleMy(parentEl) {
     parentEl.querySelector("span").classList.toggle("end-content");
     if (parentEl.querySelector("span").classList.contains("end-content")) {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
-        app.dataYearMonth.year
+        app.subsTime.year
       );
-      app.state.infoPerSeq.form3.addOns = app.dataAddsOn.year;
-      app.state.currentForm2Comp = app.dataYearMonth.year;
+      app.data.form3.addsOns = app.AddsOn.year;
+      app.data.form2.selecetedForm2Plan = app.subsTime.year;
+      app.data.form2.yearOrMonth = "year";
     } else {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
-        app.dataYearMonth.month
+        app.subsTime.month
       );
-      app.state.infoPerSeq.form3.addOns = app.dataAddsOn.month;
-      app.state.currentForm2Comp = app.dataYearMonth.month;
+      app.data.form3.addsOns = app.AddsOn.month;
+      app.data.form2.selecetedForm2Plan = app.subsTime.month;
+      app.data.form2.yearOrMonth = "month";
     }
   },
 
   init() {
     app.$.form.addEventListener("submit", (e) => {
       e.preventDefault();
-
       console.log(app.state.currentForm);
       // conditioning event form
       switch (app.state.currentForm) {
-        // form 1 as a default
-
         case `form1`:
-          app.state.infoPerSeq.form1.name =
-            e.target.querySelector('input[name="name"]').value;
-          app.state.infoPerSeq.form1.email = e.target.querySelector(
-            'input[name="email"]'
-          ).value;
-          app.state.infoPerSeq.form1.phone = e.target.querySelector(
-            'input[name="phone"]'
-          ).value;
-          app.state.infoPerSeq.form3.addOns = app.dataAddsOn.month;
-          const form2Com = app.htmlForm2Comp(app.dataYearMonth.month);
-          app.state.currentForm2Comp = app.dataYearMonth.month;
-          // form2 state
-          e.target.innerHTML = app.htmlForm2(form2Com);
-          const btnTgleMY = document.querySelector(".toggle-mon-yr div");
-          btnTgleMY.addEventListener("click", () =>
-            app.handlerToggleMy(btnTgleMY)
-          );
-
-          app.$.btnNext.insertAdjacentElement("afterend", app.$.btnBack);
-
+          app.stepOne(e);
           app.state.currentForm = `form2`;
-
           break;
-        // end form 1
-
-        // form 2
 
         case `form2`:
-          app.state.infoPerSeq.form2.plan =
-            document.querySelector('input[name="subscription"]:checked') ||
-            null;
-          app.$.btnBack;
-          if (app.state.infoPerSeq.form2.plan === null) {
-            alert("please");
-            return;
-          }
-
-          e.target.innerHTML = app.htmlForm3(app.state.infoPerSeq.form3.addOns);
-
+          app.stepTwo(e);
           app.state.currentForm = `form3`;
           break;
 
-        // end form 2
-
-        // form 3
-
         case `form3`:
-          app.state.infoPerSeq.form3.adds =
-            [...document.querySelectorAll('input[name="add-ons"]:checked')] ||
-            [];
-          if (app.state.infoPerSeq.form3.adds.length < 1) {
-            alert("centang minimal satu");
-            return;
-          }
-
-          const adds = app.state.infoPerSeq.form3.adds.map((item) => {
-            return {
-              type: item.id,
-              fee: item.value,
-              fre: app.state.infoPerSeq.form3.addOns.exp,
-            };
-          });
-          const addOns = app.htmlAddsOn(adds);
-          const props = {
-            type: app.state.infoPerSeq.form2.plan.id,
-            fee: app.state.infoPerSeq.form2.plan.defaultValue,
-            fre: app.state.infoPerSeq.form3.addOns.exp,
-            freq:
-              app.state.infoPerSeq.form3.addOns.exp === "mo"
-                ? "monthly"
-                : "yearly",
-          };
-          const total =
-            adds
-              .map((item) => {
-                return item.fee;
-              })
-              .reduce((total, num) => {
-                return +total + +num;
-              }, 0) + +props.fee;
-          e.target.innerHTML = app.htmlForm4(props, addOns, total);
-          document.querySelector("#btn-form").textContent = "Confirm";
-          const btnChange = document.querySelector("#change");
-          btnChange.addEventListener("click", (e) => {
-            const form2Com = app.htmlForm2Comp(app.state.currentForm2Comp);
-            app.$.form.innerHTML = app.htmlForm2(form2Com);
-            console.log(app.$.btnMYly);
-            document.querySelector("#btn-form").textContent = "Next step";
-            app.state.currentForm = "form2";
-            const btnTgleMY = document.querySelector(".toggle-mon-yr div");
-            btnTgleMY.addEventListener("click", () =>
-              app.handlerToggleMy(btnTgleMY)
-            );
-          });
-
+          app.stepThree(e);
           app.state.currentForm = `form4`;
           break;
-
-        // form 3
       }
     });
 
+    // initial back id
     app.$.btnBack.id = "btn-back";
     app.$.btnBack.textContent = "Go back";
     app.$.btnBack.addEventListener("click", (e) => {
@@ -393,21 +388,26 @@ const app = {
       switch (app.state.currentForm) {
         case "form2":
           app.state.currentForm = "form1";
-          app.$.form.innerHTML = app.htmlForm1(app.state.infoPerSeq.form1);
-
+          app.$.form.innerHTML = app.htmlForm1(app.data.form1);
           e.target.remove();
           break;
         case "form3":
           app.state.currentForm = "form2";
-          const compForm2 = app.htmlForm2Comp(app.state.currentForm2Comp);
-          app.$.form.innerHTML = app.htmlForm2(compForm2);
-
+          app.$.form.innerHTML = app.htmlForm2(
+            app.htmlForm2Comp(app.data.form2.selecetedForm2Plan)
+          );
+          const btnTgleMY = document.querySelector(".toggle-mon-yr div");
+          const span = btnTgleMY.querySelector("span").classList;
+          app.data.form2.yearOrMonth === "year"
+            ? span.add("end-content")
+            : span.remove("end-content");
+          btnTgleMY.addEventListener("click", () =>
+            app.handlerToggleMy(btnTgleMY)
+          );
           break;
         case "form4":
           app.state.currentForm = "form3";
-          app.$.form.innerHTML = app.htmlForm3(
-            app.state.infoPerSeq.form3.addOns
-          );
+          app.$.form.innerHTML = app.htmlForm3(app.data.form3.addsOns);
           document.querySelector("#btn-form").textContent = "Next step";
           break;
       }
