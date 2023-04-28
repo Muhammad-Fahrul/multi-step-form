@@ -56,11 +56,38 @@ const app = {
   data: {
     form2: {
       plan: null,
-      yearOrMonth: null,
-      selecetedForm2Plan: null,
+      yearOrMonth: "month",
+      selecetedForm2Plan: [
+        {
+          type: "arcade",
+          fee: 9,
+          fre: "month",
+        },
+        {
+          type: "advanced",
+          fee: 12,
+          fre: "month",
+        },
+        {
+          type: "pro",
+          fee: 15,
+          fre: "month",
+        },
+      ],
     },
     form3: {
-      addsOns: null,
+      addsOns: {
+        onlineServ: {
+          value: 1,
+        },
+        largeSto: {
+          value: 2,
+        },
+        customizable: {
+          value: 2,
+        },
+        exp: "mo",
+      },
       selectedAdds: null,
     },
   },
@@ -310,10 +337,9 @@ const app = {
     ).value;
 
     // rendering html and all functionality
-    app.data.form2.selecetedForm2Plan = app.subsTime.month; // default value
-    app.data.form2.yearOrMonth = "month";
-    app.data.form3.addsOns = app.AddsOn.month;
-    e.target.innerHTML = app.htmlForm2(app.htmlForm2Comp(app.subsTime.month));
+    e.target.innerHTML = app.htmlForm2(
+      app.htmlForm2Comp(app.data.form2.selecetedForm2Plan)
+    );
     const checkRadioBtn = document.querySelectorAll(
       'input[name="subscription"]'
     );
