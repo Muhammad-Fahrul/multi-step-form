@@ -349,6 +349,10 @@ const app = {
       }
     });
     const btnTgleMY = document.querySelector(".toggle-mon-yr div");
+    const btnSpan = btnTgleMY.querySelector("span").classList;
+    app.currentUserInfo.plan.yearOrMonth === "year"
+      ? btnSpan.add("end-content")
+      : btnSpan.remove("end-content");
     btnTgleMY.addEventListener("click", () => app.handlerToggleMy(btnTgleMY));
     app.$.btnNext.insertAdjacentElement("afterend", app.$.btnBack);
   },
@@ -433,22 +437,32 @@ const app = {
   },
 
   handlerToggleMy(parentEl) {
-    parentEl.querySelector("span").classList.toggle("end-content");
-    if (parentEl.querySelector("span").classList.contains("end-content")) {
+    const span = parentEl.querySelector("span");
+    span.classList.toggle("end-content");
+    if (span.classList.contains("end-content")) {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
         app.subsTime.year
       );
       app.data.form3.addsOns = app.AddsOn.year;
       app.data.form2.selecetedForm2Plan = app.subsTime.year;
-      app.data.form2.yearOrMonth = "year";
+      app.currentUserInfo.plan.yearOrMonth = "year";
     } else {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
         app.subsTime.month
       );
       app.data.form3.addsOns = app.AddsOn.month;
       app.data.form2.selecetedForm2Plan = app.subsTime.month;
-      app.data.form2.yearOrMonth = "month";
+      app.currentUserInfo.plan.yearOrMonth = "month";
     }
+    const checkRadioBtn = document.querySelectorAll(
+      'input[name="subscription"]'
+    );
+    checkRadioBtn.forEach((input) => {
+      if (input.id === app.currentUserInfo.plan.type.id) {
+        input.setAttribute("checked", "true");
+      }
+    });
+    console.log(app.currentUserInfo.plan.yearOrMonth);
   },
 
   init() {
@@ -506,7 +520,7 @@ const app = {
           });
           const btnTgleMY = document.querySelector(".toggle-mon-yr div");
           const span = btnTgleMY.querySelector("span").classList;
-          app.data.form2.yearOrMonth === "year"
+          app.currentUserInfo.plan.yearOrMonth === "year"
             ? span.add("end-content")
             : span.remove("end-content");
           btnTgleMY.addEventListener("click", () =>
