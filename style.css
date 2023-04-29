@@ -127,6 +127,7 @@ form input {
 
 .radio-box {
     width: 100%;
+    height: 75px;
     border: 1px solid var(--Cool-gray);
     display: flex;
     gap: 1em;

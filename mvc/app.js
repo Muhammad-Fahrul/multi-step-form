@@ -55,8 +55,6 @@ const app = {
 
   data: {
     form2: {
-      plan: null,
-      yearOrMonth: "month",
       selecetedForm2Plan: [
         {
           type: "arcade",
@@ -74,6 +72,7 @@ const app = {
           fre: "month",
         },
       ],
+      toggleMYSta: "month",
     },
     form3: {
       addsOns: {
@@ -88,11 +87,10 @@ const app = {
         },
         exp: "mo",
       },
-      selectedAdds: null,
     },
   },
 
-  subsTime: {
+  plan: {
     month: [
       {
         type: "arcade",
@@ -159,6 +157,11 @@ const app = {
     },
   },
 
+  // DOM helper method
+  addClass(adding) {
+    adding.classList.add("gray");
+  },
+
   htmlForm1({ name, email, phone }) {
     return `<caption>
     <h2>Personal Info</h2>
@@ -203,7 +206,7 @@ const app = {
   <div class="toggle-mon-yr">
     <span>monthly</span>
     <div><span></span></div>
-    <span class="gray">yearly</span>
+    <span>yearly</span>
   </div>
   <input type="submit" value="" id="submit-form" hidden />`;
   },
@@ -340,6 +343,7 @@ const app = {
     e.target.innerHTML = app.htmlForm2(
       app.htmlForm2Comp(app.data.form2.selecetedForm2Plan)
     );
+
     const checkRadioBtn = document.querySelectorAll(
       'input[name="subscription"]'
     );
@@ -349,6 +353,13 @@ const app = {
       }
     });
     const btnTgleMY = document.querySelector(".toggle-mon-yr div");
+    const prevMYEl = btnTgleMY.previousElementSibling;
+    const nextMYEl = btnTgleMY.nextElementSibling;
+    if (app.data.form2.toggleMYSta === "month") {
+      app.addClass(nextMYEl);
+    } else {
+      app.addClass(prevMYEl);
+    }
     const btnSpan = btnTgleMY.querySelector("span").classList;
     app.currentUserInfo.plan.yearOrMonth === "year"
       ? btnSpan.add("end-content")
@@ -437,21 +448,28 @@ const app = {
   },
 
   handlerToggleMy(parentEl) {
+    app.data.form2.toggleMYSta =
+      app.data.form2.toggleMYSta === "month" ? "year" : "month";
+    console.log(app.data.form2.toggleMYSta);
     const span = parentEl.querySelector("span");
     span.classList.toggle("end-content");
     if (span.classList.contains("end-content")) {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
-        app.subsTime.year
+        app.plan.year
       );
+      parentEl.previousElementSibling.classList.add("gray");
+      parentEl.nextElementSibling.classList.remove("gray");
       app.data.form3.addsOns = app.AddsOn.year;
-      app.data.form2.selecetedForm2Plan = app.subsTime.year;
+      app.data.form2.selecetedForm2Plan = app.plan.year;
       app.currentUserInfo.plan.yearOrMonth = "year";
     } else {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
-        app.subsTime.month
+        app.plan.month
       );
+      parentEl.previousElementSibling.classList.remove("gray");
+      parentEl.nextElementSibling.classList.add("gray");
       app.data.form3.addsOns = app.AddsOn.month;
-      app.data.form2.selecetedForm2Plan = app.subsTime.month;
+      app.data.form2.selecetedForm2Plan = app.plan.month;
       app.currentUserInfo.plan.yearOrMonth = "month";
     }
     const checkRadioBtn = document.querySelectorAll(
@@ -514,6 +532,13 @@ const app = {
             }
           });
           const btnTgleMY = document.querySelector(".toggle-mon-yr div");
+          const prevMYEl = btnTgleMY.previousElementSibling;
+          const nextMYEl = btnTgleMY.nextElementSibling;
+          if (app.data.form2.toggleMYSta === "month") {
+            app.addClass(nextMYEl);
+          } else {
+            app.addClass(prevMYEl);
+          }
           const span = btnTgleMY.querySelector("span").classList;
           app.currentUserInfo.plan.yearOrMonth === "year"
             ? span.add("end-content")
@@ -521,6 +546,7 @@ const app = {
           btnTgleMY.addEventListener("click", () =>
             app.handlerToggleMy(btnTgleMY)
           );
+
           break;
         case "form4":
           app.state.currentForm = "form3";
