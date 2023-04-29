@@ -60,105 +60,78 @@ const app = {
 
   data: {
     form2: {
-      selecetedForm2Plan: [
-        {
-          type: "arcade",
-          fee: 9,
-          fre: "month",
-        },
-        {
-          type: "advanced",
-          fee: 12,
-          fre: "month",
-        },
-        {
-          type: "pro",
-          fee: 15,
-          fre: "month",
-        },
-      ],
+      selecetedForm2Plan: {
+        arcade: "9",
+        advanced: "12",
+        pro: "15",
+      },
       toggleMYSta: "month",
     },
+
     form3: {
       addsOns: {
-        onlineServ: {
+        onlineService: {
+          type: "Online Service",
           value: 1,
+          feat: "Acces to multiplayer games",
+          exp: "mo",
         },
-        largeSto: {
+        largerStorage: {
+          type: "Local Storage",
           value: 2,
+          feat: "Acces to multiplayer games",
+          exp: "mo",
         },
-        customizable: {
+        customizableProfile: {
+          type: "Customizable Profile",
           value: 2,
+          feat: "Acces to multiplayer games",
+          exp: "mo",
         },
-        exp: "mo",
       },
     },
-  },
-
-  plan: {
-    month: [
-      {
-        type: "arcade",
-        fee: 9,
-        fre: "month",
-      },
-      {
-        type: "advanced",
-        fee: 12,
-        fre: "month",
-      },
-      {
-        type: "pro",
-        fee: 15,
-        fre: "month",
-      },
-    ],
-    year: [
-      {
-        type: "arcade",
-        fee: 90,
-        fre: "year",
-        exp: `2 months free`,
-      },
-      {
-        type: "advanced",
-        fee: 12,
-        fre: "year",
-        exp: `2 months free`,
-      },
-      {
-        type: "pro",
-        fee: 15,
-        fre: "year",
-        exp: `2 months free`,
-      },
-    ],
   },
 
   AddsOn: {
     month: {
-      onlineServ: {
+      onlineService: {
+        type: "Online Service",
         value: 1,
+        feat: "Acces to multiplayer games",
+        exp: "mo",
       },
-      largeSto: {
+      largerStorage: {
+        type: "Local Storage",
         value: 2,
+        feat: "Acces to multiplayer games",
+        exp: "mo",
       },
-      customizable: {
+      customizableProfile: {
+        type: "Customizable Profile",
         value: 2,
+        feat: "Acces to multiplayer games",
+        exp: "mo",
       },
-      exp: "mo",
     },
     year: {
-      onlineServ: {
+      onlineService: {
+        type: "Online Service",
         value: 10,
+        feat: "Acces to multiplayer games",
+        exp: "yr",
       },
-      largeSto: {
+      largerStorage: {
+        type: "Local Storage",
         value: 20,
+        feat: "Acces to multiplayer games",
+        exp: "yr",
       },
-      customizable: {
+      customizableProfile: {
+        type: "Customizable Profile",
         value: 20,
+        feat: "Acces to multiplayer games",
+        exp: "yr",
       },
-      exp: "yr",
     },
   },
 
@@ -224,64 +197,38 @@ const app = {
   },
 
   htmlForm3(props) {
-    return `<caption>
-            <h2>Pick add-ons</h2>
-            </caption>
-            <p>Add-ons help enhance your gaming experience.</p>
-            <div>
-        <label class="radio-box check" for="online-service">
-          <div class="flex">
-            <input
-              type="checkbox"
-              name="add-ons"
-              id="online-service"
-              value="${props.onlineServ.value}"
-            />
-            <div>
-              <span>Online service</span>
-              <p>Access to multiplayer games</p>
-            </div>
-          </div>
-          <p>${props.onlineServ.value}/${props.exp}</p>
-        </label>
-        </div>
+    function htmlUtilAdds(utils) {
+      return `
+       <div>
+       <label class="radio-box check" for="${utils.type}">
+         <div class="flex">
+           <input
+             type="checkbox"
+             name="add-ons"
+             id="${utils.type}"
+             value="${utils.value}"
+           />
+           <div>
+             <span>${utils.type}</span>
+             <p>${utils.feat}</p>
+           </div>
+         </div>
+         <p>${utils.value}/${utils.exp}</p>
+       </label>
+       </div>`;
+    }
 
-          <div>
-          <label class="radio-box check" for="larger-storage">
-            <div class="flex">
-              <input
-                type="checkbox"
-                name="add-ons"
-                id="larger-storage"
-                value="${props.largeSto.value}"
-              />
-              <div>
-                <span>Larger-Storage</span>
-                <p>Extra 1TB of cloud save</p>
-              </div>
-            </div>
-            <p>${props.largeSto.value}/${props.exp}</p>
-          </label>
-          </div>
-
-          <div>
-          <label class="radio-box check" for="customizable">
-            <div class="flex">
-              <input
-                type="checkbox"
-                name="add-ons"
-                id="customizable"
-                value="${props.customizable.value}"
-              />
-              <div>
-                <span>Customizable Profile</span>
-                <p>Custom theme on your profile</p>
-              </div>
-            </div>
-            <p>${props.customizable.value}/${props.exp}</p>
-          </label>
-          <input type="submit" value="" id="submit-form" hidden />
-          </div>`;
+    let output = "";
+    for (const prop in props) {
+      output += htmlUtilAdds(props[prop]);
+    }
+    return `
+    <caption>
+      <h2>Pick add-ons</h2>
+    </caption>
+    <p>Add-ons help enhance your gaming experience.</p>
+      ${output}
+    <input type="submit" value="" id="submit-form" hidden />`;
   },
 
   htmlForm4(props, addsOn, total) {
@@ -292,7 +239,7 @@ const app = {
             <div class="radio-box form4 bg-magnolia finishing">
               <div>
                 <div class="finishing-box">
-                  <span>${props.type} <span>(${props.freq})</span></span>
+                  <span>${props.type}<span>(${props.freq})</span></span>
                   <a id="change" href="#">Change</a>
                 </div>
                 <p>${props.fee}/${props.fre}</p>
@@ -306,38 +253,43 @@ const app = {
   },
 
   htmlForm2Comp(props) {
-    return props
-      .map((data) => {
-        return `
+    let output = "";
+    let mnYe = {
+      fre: app.data.form2.toggleMYSta,
+      exp: app.data.form2.toggleMYSta === "month" ? "" : "2 months free",
+    };
+    for (const prop in props) {
+      output += `
             <div>
-              <input type="radio" name="subscription" id="${
-                data.type
-              }" value="${data.fee}" hidden />
-              <label class="radio-box" for="${data.type}">
-                <img src="./assets/images/icon-${data.type}.svg" alt="" />
+              <input type="radio" name="subscription" id="${prop}" value="${
+        props[prop]
+      }" hidden />
+              <label class="radio-box" for="${prop}">
+                <img src="./assets/images/icon-${prop}.svg" alt="" />
                 <div>
-                  <span>${data.type}</span>
-                  <p>$${data.fee}/${data.fre}</p>
-                  <p>${data.exp || ""}</p>
+                  <span>${prop}</span>
+                  <p>$${props[prop]}/${mnYe.fre}</p>
+                  <p>${mnYe.exp || ""}</p>
                 </div>
               </label>
             </div>`;
-      })
-      .join("");
+    }
+
+    return output;
   },
 
   htmlAddsOn(addsOn) {
-    return addsOn
-      .map((item) => {
-        return `
+    let outPut = "";
+    addsOn.forEach((item) => {
+      outPut += `
       <div>
         <div class="finishing-box">
           <span>${item.type}</span>
         </div>
         <p>$${item.fee}/${item.fre}</p>
       </div>`;
-      })
-      .join("");
+    });
+    return outPut;
   },
 
   stepOne(e) {
@@ -378,6 +330,8 @@ const app = {
       : btnSpan.remove("end-content");
     btnTgleMY.addEventListener("click", () => app.handlerToggleMy(btnTgleMY));
     app.$.btnNext.insertAdjacentElement("afterend", app.$.btnBack);
+
+    app.state.currentForm = `form2`;
   },
 
   stepTwo(e) {
@@ -393,14 +347,18 @@ const app = {
         }
       });
     });
+    app.state.currentForm = `form3`;
   },
 
   stepThree(e) {
+    console.log(app.state.currentForm);
     // check validity
     app.currentUserInfo.addOns =
       [...document.querySelectorAll('input[name="add-ons"]:checked')] || [];
     if (app.currentUserInfo.addOns.length < 1) {
       alert("centang minimal satu");
+      app.state.activeLink--;
+      app.activateLink();
       return;
     }
 
@@ -408,17 +366,17 @@ const app = {
       return {
         type: item.id,
         fee: item.value,
-        fre: app.data.form3.addsOns.exp,
+        fre: app.data.form2.toggleMYSta === "month" ? "mo" : "yr",
       };
     });
 
     const addOns = app.htmlAddsOn(adds);
-
+    console.log(app.currentUserInfo.plan.type.value);
     const props = {
       type: app.currentUserInfo.plan.type.id,
-      fee: app.currentUserInfo.plan.type.defaultValue,
-      fre: app.data.form3.addsOns.exp,
-      freq: app.data.form3.addsOns.exp === "mo" ? "monthly" : "yearly",
+      fee: app.currentUserInfo.plan.type.value,
+      fre: app.data.form2.toggleMYSta === "month" ? "mo" : "yr",
+      freq: app.data.form2.toggleMYSta === "month" ? "monthly" : "yearly",
     };
 
     const total =
@@ -429,6 +387,7 @@ const app = {
         .reduce((total, num) => {
           return +total + +num;
         }, 0) + +props.fee;
+
     e.target.innerHTML = app.htmlForm4(props, addOns, total);
 
     // rendering html and all functionality
@@ -436,6 +395,8 @@ const app = {
     // change btn
     const btnChange = document.querySelector("#change");
     btnChange.addEventListener("click", (e) => {
+      app.state.activeLink = 1;
+      app.activateLink();
       const form2Com = app.htmlForm2Comp(app.data.form2.selecetedForm2Plan);
       app.$.form.innerHTML = app.htmlForm2(form2Com);
       const checkRadioBtn = document.querySelectorAll(
@@ -455,6 +416,8 @@ const app = {
         : span.remove("end-content");
       btnTgleMY.addEventListener("click", () => app.handlerToggleMy(btnTgleMY));
     });
+
+    app.state.currentForm = `form4`;
   },
 
   handlerToggleMy(parentEl) {
@@ -464,21 +427,21 @@ const app = {
     span.classList.toggle("end-content");
     if (span.classList.contains("end-content")) {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
-        app.plan.year
+        app.pricing.yearly.plan
       );
       parentEl.previousElementSibling.classList.add("gray");
       parentEl.nextElementSibling.classList.remove("gray");
       app.data.form3.addsOns = app.AddsOn.year;
-      app.data.form2.selecetedForm2Plan = app.plan.year;
+      app.data.form2.selecetedForm2Plan = app.pricing.yearly.plan;
       app.currentUserInfo.plan.yearOrMonth = "year";
     } else {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
-        app.plan.month
+        app.pricing.monthly.plan
       );
       parentEl.previousElementSibling.classList.remove("gray");
       parentEl.nextElementSibling.classList.add("gray");
       app.data.form3.addsOns = app.AddsOn.month;
-      app.data.form2.selecetedForm2Plan = app.plan.month;
+      app.data.form2.selecetedForm2Plan = app.pricing.monthly.plan;
       app.currentUserInfo.plan.yearOrMonth = "month";
     }
     const checkRadioBtn = document.querySelectorAll(
@@ -491,33 +454,30 @@ const app = {
     app.$.form.addEventListener("submit", (e) => {
       e.preventDefault();
       // conditioning event form
+      console.log(app.state.currentForm);
       if (app.state.currentForm === "form4") {
         return;
       }
       app.state.activeLink++;
-      console.log(app.state.activeLink);
       app.activateLink();
       switch (app.state.currentForm) {
         case `form1`:
           app.stepOne(e);
-          app.state.currentForm = `form2`;
           break;
 
         case `form2`:
           app.stepTwo(e);
-          app.state.currentForm = `form3`;
           break;
 
         case `form3`:
           app.stepThree(e);
-          app.state.currentForm = `form4`;
           break;
       }
     });
 
     // back funct
     app.$.btnBack.addEventListener("click", (e) => {
-      if (app.state.currentForm === "form") {
+      if (app.state.currentForm === "form1") {
         return;
       }
       app.state.activeLink--;
