@@ -409,8 +409,6 @@ const app = {
       freq: app.data.form3.addsOns.exp === "mo" ? "monthly" : "yearly",
     };
 
-    console.log(app.currentUserInfo);
-
     const total =
       adds
         .map((item) => {
@@ -450,7 +448,6 @@ const app = {
   handlerToggleMy(parentEl) {
     app.data.form2.toggleMYSta =
       app.data.form2.toggleMYSta === "month" ? "year" : "month";
-    console.log(app.data.form2.toggleMYSta);
     const span = parentEl.querySelector("span");
     span.classList.toggle("end-content");
     if (span.classList.contains("end-content")) {
@@ -481,7 +478,6 @@ const app = {
   init() {
     app.$.form.addEventListener("submit", (e) => {
       e.preventDefault();
-      console.log(app.state.currentForm);
       // conditioning event form
       switch (app.state.currentForm) {
         case `form1`:
@@ -505,7 +501,6 @@ const app = {
     app.$.btnBack.id = "btn-back";
     app.$.btnBack.textContent = "Go back";
     app.$.btnBack.addEventListener("click", (e) => {
-      console.log(app.state.currentForm);
       switch (app.state.currentForm) {
         case "form2":
           app.currentUserInfo.plan.type = document.querySelector(
