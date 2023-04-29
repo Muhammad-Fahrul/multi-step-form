@@ -1,5 +1,6 @@
 const app = {
   $: {
+    main: document.querySelector("#main"),
     form: document.querySelector("#default-form"),
     btn: document.querySelector(".btn"),
     btnNext: document.querySelector("#btn-form"),
@@ -24,9 +25,24 @@ const app = {
         pro: "15",
       },
       addOns: {
-        onlineService: "1",
-        largerStorage: "2",
-        customizableProfile: "2",
+        onlineService: {
+          type: "Online Service",
+          value: 1,
+          feat: "Acces to multiplayer games",
+          exp: "mo",
+        },
+        largerStorage: {
+          type: "Local Storage",
+          value: 2,
+          feat: "Acces to multiplayer games",
+          exp: "mo",
+        },
+        customizableProfile: {
+          type: "Customizable Profile",
+          value: 2,
+          feat: "Acces to multiplayer games",
+          exp: "mo",
+        },
       },
     },
     yearly: {
@@ -36,9 +52,24 @@ const app = {
         pro: "150",
       },
       addOns: {
-        onlineService: "10",
-        largerStorage: "20",
-        customizableProfile: "20",
+        onlineService: {
+          type: "Online Service",
+          value: 10,
+          feat: "Acces to multiplayer games",
+          exp: "yr",
+        },
+        largerStorage: {
+          type: "Local Storage",
+          value: 20,
+          feat: "Acces to multiplayer games",
+          exp: "yr",
+        },
+        customizableProfile: {
+          type: "Customizable Profile",
+          value: 20,
+          feat: "Acces to multiplayer games",
+          exp: "yr",
+        },
       },
     },
   },
@@ -69,7 +100,7 @@ const app = {
     },
 
     form3: {
-      addsOns: {
+      addOns: {
         onlineService: {
           type: "Online Service",
           value: 1,
@@ -88,49 +119,6 @@ const app = {
           feat: "Acces to multiplayer games",
           exp: "mo",
         },
-      },
-    },
-  },
-
-  AddsOn: {
-    month: {
-      onlineService: {
-        type: "Online Service",
-        value: 1,
-        feat: "Acces to multiplayer games",
-        exp: "mo",
-      },
-      largerStorage: {
-        type: "Local Storage",
-        value: 2,
-        feat: "Acces to multiplayer games",
-        exp: "mo",
-      },
-      customizableProfile: {
-        type: "Customizable Profile",
-        value: 2,
-        feat: "Acces to multiplayer games",
-        exp: "mo",
-      },
-    },
-    year: {
-      onlineService: {
-        type: "Online Service",
-        value: 10,
-        feat: "Acces to multiplayer games",
-        exp: "yr",
-      },
-      largerStorage: {
-        type: "Local Storage",
-        value: 20,
-        feat: "Acces to multiplayer games",
-        exp: "yr",
-      },
-      customizableProfile: {
-        type: "Customizable Profile",
-        value: 20,
-        feat: "Acces to multiplayer games",
-        exp: "yr",
       },
     },
   },
@@ -249,7 +237,23 @@ const app = {
             <div class="radio-box form4 between">
               <span>Total <span>(per ${props.freq})</span></span>
               <p>$${total}/${props.fre}</p>
-            </div>`;
+            </div>
+            <input type="submit" id="submit-form" hidden />
+            `;
+  },
+
+  htmlForm5() {
+    return `
+    <div id="__container">
+      <img src="./assets/images/icon-thank-you.svg" alt="" />
+      <h3>Thank you!</h3>
+      <p>
+        Thanks for confirming your subscription! We hope you have fun using our
+        platform. If you ever need support, please feel free to email us at
+        support@loremgaming.com.
+      </p>
+    </div>
+    `;
   },
 
   htmlForm2Comp(props) {
@@ -338,7 +342,7 @@ const app = {
     app.currentUserInfo.plan.type = document.querySelector(
       'input[name="subscription"]:checked'
     );
-    e.target.innerHTML = app.htmlForm3(app.data.form3.addsOns);
+    e.target.innerHTML = app.htmlForm3(app.data.form3.addOns);
     const checkedInput = document.querySelectorAll('input[name="add-ons"]');
     checkedInput.forEach((input) => {
       app.currentUserInfo.addOns.forEach((el) => {
@@ -351,7 +355,6 @@ const app = {
   },
 
   stepThree(e) {
-    console.log(app.state.currentForm);
     // check validity
     app.currentUserInfo.addOns =
       [...document.querySelectorAll('input[name="add-ons"]:checked')] || [];
@@ -371,7 +374,6 @@ const app = {
     });
 
     const addOns = app.htmlAddsOn(adds);
-    console.log(app.currentUserInfo.plan.type.value);
     const props = {
       type: app.currentUserInfo.plan.type.id,
       fee: app.currentUserInfo.plan.type.value,
@@ -431,7 +433,7 @@ const app = {
       );
       parentEl.previousElementSibling.classList.add("gray");
       parentEl.nextElementSibling.classList.remove("gray");
-      app.data.form3.addsOns = app.AddsOn.year;
+      app.data.form3.addOns = app.pricing.yearly.addOns;
       app.data.form2.selecetedForm2Plan = app.pricing.yearly.plan;
       app.currentUserInfo.plan.yearOrMonth = "year";
     } else {
@@ -440,7 +442,7 @@ const app = {
       );
       parentEl.previousElementSibling.classList.remove("gray");
       parentEl.nextElementSibling.classList.add("gray");
-      app.data.form3.addsOns = app.AddsOn.month;
+      app.data.form3.addOns = app.pricing.monthly.addOns;
       app.data.form2.selecetedForm2Plan = app.pricing.monthly.plan;
       app.currentUserInfo.plan.yearOrMonth = "month";
     }
@@ -454,9 +456,9 @@ const app = {
     app.$.form.addEventListener("submit", (e) => {
       e.preventDefault();
       // conditioning event form
-      console.log(app.state.currentForm);
+      console.log(app.state.activeLink);
       if (app.state.currentForm === "form4") {
-        return;
+        app.state.activeLink = 2;
       }
       app.state.activeLink++;
       app.activateLink();
@@ -471,6 +473,11 @@ const app = {
 
         case `form3`:
           app.stepThree(e);
+          break;
+
+        case "form4":
+          console.log(app.state.currentForm);
+          app.$.main.innerHTML = app.htmlForm5();
           break;
       }
     });

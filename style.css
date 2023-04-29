@@ -45,6 +45,32 @@ body {
     align-items: center;
 }
 
+#__container {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    margin-bottom: 2em;
+    flex-direction: column;
+    margin-inline: auto;
+    gap: .5em;
+    padding: 2.5em;
+    color: black;
+    background-color: var(--White);
+    box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, 0.315);
+    border-radius: 10px;
+    color: var(--Cool-gray);
+    text-align: center;
+    line-height: 1.7rem;
+}
+
+#__container img {
+    width: 20%;
+}
+
+#__container h3 {
+    color: rgba(19, 19, 19, 0.637);
+}
+
 aside {
     width: 100%;
     min-height: 25%;
