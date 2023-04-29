@@ -3,11 +3,16 @@ const app = {
     form: document.querySelector("#default-form"),
     btn: document.querySelector(".btn"),
     btnNext: document.querySelector("#btn-form"),
-    btnBack: document.createElement("label"),
+    btnBack: document.querySelector("#btn-back"),
+  },
+
+  $$: {
+    allLinks: document.querySelectorAll("aside li span"),
   },
 
   state: {
     currentForm: `form1`,
+    activeLink: 0,
   },
 
   // pricing
@@ -160,6 +165,13 @@ const app = {
   // DOM helper method
   addClass(adding) {
     adding.classList.add("gray");
+  },
+
+  activateLink() {
+    app.$$.allLinks.forEach((el) => {
+      el.classList.remove("current-form");
+    });
+    app.$$.allLinks[app.state.activeLink].classList.add("current-form");
   },
 
   htmlForm1({ name, email, phone }) {
@@ -343,7 +355,7 @@ const app = {
     e.target.innerHTML = app.htmlForm2(
       app.htmlForm2Comp(app.data.form2.selecetedForm2Plan)
     );
-
+    app.$.btnBack.style.display = "block";
     const checkRadioBtn = document.querySelectorAll(
       'input[name="subscription"]'
     );
@@ -479,6 +491,12 @@ const app = {
     app.$.form.addEventListener("submit", (e) => {
       e.preventDefault();
       // conditioning event form
+      if (app.state.currentForm === "form4") {
+        return;
+      }
+      app.state.activeLink++;
+      console.log(app.state.activeLink);
+      app.activateLink();
       switch (app.state.currentForm) {
         case `form1`:
           app.stepOne(e);
@@ -497,10 +515,13 @@ const app = {
       }
     });
 
-    // initial back id
-    app.$.btnBack.id = "btn-back";
-    app.$.btnBack.textContent = "Go back";
+    // back funct
     app.$.btnBack.addEventListener("click", (e) => {
+      if (app.state.currentForm === "form") {
+        return;
+      }
+      app.state.activeLink--;
+      app.activateLink();
       switch (app.state.currentForm) {
         case "form2":
           app.currentUserInfo.plan.type = document.querySelector(
