@@ -14,6 +14,32 @@ const app = {
   state: {
     currentForm: `form1`,
     activeLink: 0,
+    selecetedForm2Plan: {
+      arcade: "9",
+      advanced: "12",
+      pro: "15",
+    },
+    toggleMYSta: "month",
+    selectedAddOns: {
+      onlineService: {
+        type: "Online Service",
+        value: 1,
+        feat: "Acces to multiplayer games",
+        exp: "mo",
+      },
+      largerStorage: {
+        type: "Local Storage",
+        value: 2,
+        feat: "Acces to multiplayer games",
+        exp: "mo",
+      },
+      customizableProfile: {
+        type: "Customizable Profile",
+        value: 2,
+        feat: "Acces to multiplayer games",
+        exp: "mo",
+      },
+    },
   },
 
   // pricing
@@ -87,40 +113,6 @@ const app = {
       yearOrMonth: "",
     },
     addOns: [],
-  },
-
-  data: {
-    form2: {
-      selecetedForm2Plan: {
-        arcade: "9",
-        advanced: "12",
-        pro: "15",
-      },
-      toggleMYSta: "month",
-    },
-
-    form3: {
-      addOns: {
-        onlineService: {
-          type: "Online Service",
-          value: 1,
-          feat: "Acces to multiplayer games",
-          exp: "mo",
-        },
-        largerStorage: {
-          type: "Local Storage",
-          value: 2,
-          feat: "Acces to multiplayer games",
-          exp: "mo",
-        },
-        customizableProfile: {
-          type: "Customizable Profile",
-          value: 2,
-          feat: "Acces to multiplayer games",
-          exp: "mo",
-        },
-      },
-    },
   },
 
   // DOM helper method
@@ -259,8 +251,8 @@ const app = {
   htmlForm2Comp(props) {
     let output = "";
     let mnYe = {
-      fre: app.data.form2.toggleMYSta,
-      exp: app.data.form2.toggleMYSta === "month" ? "" : "2 months free",
+      fre: app.state.toggleMYSta,
+      exp: app.state.toggleMYSta === "month" ? "" : "2 months free",
     };
     for (const prop in props) {
       output += `
@@ -309,7 +301,7 @@ const app = {
 
     // rendering html and all functionality
     e.target.innerHTML = app.htmlForm2(
-      app.htmlForm2Comp(app.data.form2.selecetedForm2Plan)
+      app.htmlForm2Comp(app.state.selecetedForm2Plan)
     );
     app.$.btnBack.style.display = "block";
     const checkRadioBtn = document.querySelectorAll(
@@ -323,7 +315,7 @@ const app = {
     const btnTgleMY = document.querySelector(".toggle-mon-yr div");
     const prevMYEl = btnTgleMY.previousElementSibling;
     const nextMYEl = btnTgleMY.nextElementSibling;
-    if (app.data.form2.toggleMYSta === "month") {
+    if (app.state.toggleMYSta === "month") {
       app.addClass(nextMYEl);
     } else {
       app.addClass(prevMYEl);
@@ -342,7 +334,7 @@ const app = {
     app.currentUserInfo.plan.type = document.querySelector(
       'input[name="subscription"]:checked'
     );
-    e.target.innerHTML = app.htmlForm3(app.data.form3.addOns);
+    e.target.innerHTML = app.htmlForm3(app.state.selectedAddOns);
     const checkedInput = document.querySelectorAll('input[name="add-ons"]');
     checkedInput.forEach((input) => {
       app.currentUserInfo.addOns.forEach((el) => {
@@ -369,7 +361,7 @@ const app = {
       return {
         type: item.id,
         fee: item.value,
-        fre: app.data.form2.toggleMYSta === "month" ? "mo" : "yr",
+        fre: app.state.toggleMYSta === "month" ? "mo" : "yr",
       };
     });
 
@@ -377,8 +369,8 @@ const app = {
     const props = {
       type: app.currentUserInfo.plan.type.id,
       fee: app.currentUserInfo.plan.type.value,
-      fre: app.data.form2.toggleMYSta === "month" ? "mo" : "yr",
-      freq: app.data.form2.toggleMYSta === "month" ? "monthly" : "yearly",
+      fre: app.state.toggleMYSta === "month" ? "mo" : "yr",
+      freq: app.state.toggleMYSta === "month" ? "monthly" : "yearly",
     };
 
     const total =
@@ -399,7 +391,7 @@ const app = {
     btnChange.addEventListener("click", (e) => {
       app.state.activeLink = 1;
       app.activateLink();
-      const form2Com = app.htmlForm2Comp(app.data.form2.selecetedForm2Plan);
+      const form2Com = app.htmlForm2Comp(app.state.selecetedForm2Plan);
       app.$.form.innerHTML = app.htmlForm2(form2Com);
       const checkRadioBtn = document.querySelectorAll(
         'input[name="subscription"]'
@@ -423,8 +415,8 @@ const app = {
   },
 
   handlerToggleMy(parentEl) {
-    app.data.form2.toggleMYSta =
-      app.data.form2.toggleMYSta === "month" ? "year" : "month";
+    app.state.toggleMYSta =
+      app.state.toggleMYSta === "month" ? "year" : "month";
     const span = parentEl.querySelector("span");
     span.classList.toggle("end-content");
     if (span.classList.contains("end-content")) {
@@ -433,8 +425,8 @@ const app = {
       );
       parentEl.previousElementSibling.classList.add("gray");
       parentEl.nextElementSibling.classList.remove("gray");
-      app.data.form3.addOns = app.pricing.yearly.addOns;
-      app.data.form2.selecetedForm2Plan = app.pricing.yearly.plan;
+      app.state.selectedAddOns = app.pricing.yearly.addOns;
+      app.state.selecetedForm2Plan = app.pricing.yearly.plan;
       app.currentUserInfo.plan.yearOrMonth = "year";
     } else {
       app.$.form.querySelector(".test").innerHTML = app.htmlForm2Comp(
@@ -442,8 +434,8 @@ const app = {
       );
       parentEl.previousElementSibling.classList.remove("gray");
       parentEl.nextElementSibling.classList.add("gray");
-      app.data.form3.addOns = app.pricing.monthly.addOns;
-      app.data.form2.selecetedForm2Plan = app.pricing.monthly.plan;
+      app.state.selectedAddOns = app.pricing.monthly.addOns;
+      app.state.selecetedForm2Plan = app.pricing.monthly.plan;
       app.currentUserInfo.plan.yearOrMonth = "month";
     }
     const checkRadioBtn = document.querySelectorAll(
@@ -452,7 +444,7 @@ const app = {
     checkRadioBtn[0].setAttribute("checked", "true");
   },
 
-  init() {
+  registerEventListerners() {
     app.$.form.addEventListener("submit", (e) => {
       e.preventDefault();
       // conditioning event form
@@ -504,7 +496,7 @@ const app = {
             [];
           app.state.currentForm = "form2";
           app.$.form.innerHTML = app.htmlForm2(
-            app.htmlForm2Comp(app.data.form2.selecetedForm2Plan)
+            app.htmlForm2Comp(app.state.selecetedForm2Plan)
           );
           const checkRadioBtn = document.querySelectorAll(
             'input[name="subscription"]'
@@ -517,7 +509,7 @@ const app = {
           const btnTgleMY = document.querySelector(".toggle-mon-yr div");
           const prevMYEl = btnTgleMY.previousElementSibling;
           const nextMYEl = btnTgleMY.nextElementSibling;
-          if (app.data.form2.toggleMYSta === "month") {
+          if (app.state.toggleMYSta === "month") {
             app.addClass(nextMYEl);
           } else {
             app.addClass(prevMYEl);
@@ -533,7 +525,7 @@ const app = {
           break;
         case "form4":
           app.state.currentForm = "form3";
-          app.$.form.innerHTML = app.htmlForm3(app.data.form3.addsOns);
+          app.$.form.innerHTML = app.htmlForm3(app.state.selectedAddOns);
           const checkedInput = document.querySelectorAll(
             'input[name="add-ons"]'
           );
@@ -548,6 +540,10 @@ const app = {
           break;
       }
     });
+  },
+
+  init() {
+    app.registerEventListerners();
   },
 };
 
