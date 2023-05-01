@@ -153,6 +153,20 @@ export default class View {
             `;
   }
 
+  htmlForm5() {
+    return `
+    <div id="__container">
+      <img src="./assets/images/icon-thank-you.svg" alt="" />
+      <h3>Thank you!</h3>
+      <p>
+        Thanks for confirming your subscription! We hope you have fun using our
+        platform. If you ever need support, please feel free to email us at
+        support@loremgaming.com.
+      </p>
+    </div>
+    `;
+  }
+
   htmlAddsOn(addsOn) {
     let outPut = "";
     addsOn.forEach((item) => {
@@ -173,31 +187,20 @@ export default class View {
       this.htmlForm2Comp(plans, stateToggMY)
     );
     this.$.btnBack.style.display = "block";
-    // const checkRadioBtn = document.querySelectorAll(
-    //   'input[name="subscription"]'
-    // );
-    // checkRadioBtn.forEach((input) => {
-    //   if (input.id === userInfo.plan.type.id) {
-    //     input.setAttribute("checked", "true");
-    //   }
-    // });
     this.$.btnNext.insertAdjacentElement("afterend", this.$.btnBack);
   }
 
   stepTwo(addOns) {
     this.$.form.innerHTML = this.htmlForm3(addOns);
-    // const checkedInput = document.querySelectorAll('input[name="add-ons"]');
-    // checkedInput.forEach((input) => {
-    //   app.currentUserInfo.addOns.forEach((el) => {
-    //     if (input.id === el.id) {
-    //       input.setAttribute("checked", "true");
-    //     }
-    //   });
-    // });
   }
 
   stepThree(props, currentAdds, total) {
+    document.querySelector("#btn-form").textContent = "Confirm";
     this.$.form.innerHTML = this.htmlForm4(props, currentAdds, total);
+  }
+
+  stepFour() {
+    this.$.main.innerHTML = this.htmlForm5();
   }
 
   handlerToggleMy(plans, toggleMYSta, btnTgleMY) {
@@ -227,8 +230,6 @@ export default class View {
       prevMYEl.classList.remove("gray");
       nextMYEl.classList.add("gray");
     }
-
-    this.defaultRadioOpt();
   }
 
   //   Dom helper method
@@ -236,16 +237,23 @@ export default class View {
     adding.classList.add("gray");
   }
 
-  defaultRadioOpt() {
+  activateLink(stateForm) {
+    const currStateLink = stateForm + 1;
+    if (currStateLink === 5) return;
+    this.$$.allLinks.forEach((el) => {
+      el.classList.remove("current-form");
+    });
+    this.$$.allLinks[stateForm].classList.add("current-form");
+  }
+
+  checkRadioBtn(dataBackUp) {
     const checkRadioBtn = document.querySelectorAll(
       'input[name="subscription"]'
     );
-    checkRadioBtn[0].setAttribute("checked", "true");
+    checkRadioBtn.forEach((input) => {
+      if (input.id === dataBackUp[1].userPlan.toLowerCase()) {
+        input.setAttribute("checked", "true");
+      }
+    });
   }
-  //   activateLink() {
-  //     $$.allLinks.forEach((el) => {
-  //       el.classList.remove("current-form");
-  //     });
-  //     $$.allLinks[state.activeLink].classList.add("current-form");
-  //   }
 }

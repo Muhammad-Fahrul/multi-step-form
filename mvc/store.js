@@ -1,5 +1,6 @@
 const initialValue = {
   currentForm: [],
+  backUpForm: [, { userPlan: "arcade" }, []],
   toggleMYSta: "month",
   planSelecOpt: [
     {
@@ -70,24 +71,24 @@ export default class Store {
     const stateToggMY = stateClone.toggleMYSta === "month" ? "month" : "year";
     const plans =
       stateClone.planSelecOpt[stateClone.toggleMYSta === "month" ? 0 : 1];
-    const form = stateClone.currentForm;
+    const dataBackUp = stateClone.backUpForm;
     const addOns =
       stateToggMY === "month"
         ? stateClone.addOns.monthly
         : stateClone.addOns.yearly;
-    const currPlan = form[1]
+    const currPlan = dataBackUp[1]
       ? {
-          type: form[1].userPlan,
-          value: plans[form[1].userPlan],
+          type: dataBackUp[1].userPlan,
+          value: plans[dataBackUp[1].userPlan],
         }
       : null;
     return {
       plans,
       stateForm,
       stateToggMY,
-      form,
       addOns,
       currPlan,
+      dataBackUp,
     };
   }
 
@@ -127,6 +128,47 @@ export default class Store {
   form3(userAddOns) {
     const stateClone = structuredClone(this.#getState());
     stateClone.currentForm[2] = userAddOns;
+
+    this.#saveState(stateClone);
+  }
+
+  form4(recap) {
+    const stateClone = structuredClone(this.#getState());
+    stateClone.currentForm[3] = recap;
+
+    this.#saveState(stateClone);
+  }
+
+  backUpForm1(name, email, phone) {
+    const stateClone = structuredClone(this.#getState());
+    stateClone.backUpForm[0] = {
+      name,
+      email,
+      phone,
+    };
+
+    this.#saveState(stateClone);
+  }
+
+  backUpForm2(userPlan) {
+    const stateClone = structuredClone(this.#getState());
+    stateClone.backUpForm[1] = {
+      userPlan,
+    };
+
+    this.#saveState(stateClone);
+  }
+
+  backUpForm3(userAddOns) {
+    const stateClone = structuredClone(this.#getState());
+    stateClone.backUpForm[2] = userAddOns;
+
+    this.#saveState(stateClone);
+  }
+
+  backUpForm4(recap) {
+    const stateClone = structuredClone(this.#getState());
+    stateClone.backUpForm[3] = recap;
 
     this.#saveState(stateClone);
   }

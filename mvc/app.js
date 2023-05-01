@@ -17,12 +17,13 @@ function init() {
 
   view.bindEventNextBtn((event) => {
     event.preventDefault();
-    const { stateForm, plans, stateToggMY, addOns, currPlan } = store.datas;
-    console.log(stateForm);
+    const { stateForm, plans, stateToggMY, addOns, dataBackUp, currPlan } =
+      store.datas;
     if (stateForm === 4) {
       console.log("berakhir");
       return;
     }
+    view.activateLink(stateForm + 1);
 
     switch (stateForm) {
       case 0:
@@ -30,22 +31,37 @@ function init() {
         const email = document.querySelector('input[name="email"]').value;
         const phone = document.querySelector('input[name="phone"]').value;
         store.form1(name, email, phone);
+        store.backUpForm1(name, email, phone);
         view.stepOne(plans, stateToggMY);
+
+        view.checkRadioBtn(dataBackUp);
         const btnToggle = document.querySelector(".toggle-mon-yr div");
         btnToggle.addEventListener("click", (e) => {
-          const { plans, stateToggMY } = store.datas;
-          const newTgState = store.updateToggle(stateToggMY);
-          view.handlerToggleMy(plans, newTgState, btnToggle);
-          store.updateToggle(stateToggMY);
+          store.updateToggle(store.datas.stateToggMY);
+          view.handlerToggleMy(
+            store.datas.plans,
+            store.datas.stateToggMY,
+            btnToggle
+          );
+          view.checkRadioBtn(dataBackUp);
         });
-        view.defaultRadioOpt();
         break;
       case 1:
         const userPlan = document.querySelector(
           'input[name="subscription"]:checked'
         ).id;
+
         store.form2(userPlan);
+        store.backUpForm2(userPlan);
         view.stepTwo(addOns);
+        const checkedInput = document.querySelectorAll('input[name="add-ons"]');
+        checkedInput.forEach((input) => {
+          dataBackUp[2].forEach((el) => {
+            if (input.id.toLowerCase() === el.type.toLowerCase()) {
+              input.setAttribute("checked", "true");
+            }
+          });
+        });
         break;
       case 2:
         const userAddOns =
@@ -54,7 +70,7 @@ function init() {
         const addsData = [];
         userAddOns.forEach((item) => {
           for (const p in addOns) {
-            if (item.id.toLowerCase() === addOns[p].type)
+            if (item.id.toLowerCase() === addOns[p].type.toLowerCase())
               addsData.push(addOns[p]);
           }
         });
@@ -77,25 +93,80 @@ function init() {
               return +total + +num;
             }, 0) + +props.fee;
 
-        view.stepThree(props, currentAdds, total);
         store.form3(addsData);
+        store.backUpForm3(addsData);
+        view.stepThree(props, currentAdds, total);
         break;
       case 3:
-        console.log("state 4");
+        const recap = {
+          user: dataBackUp[0],
+          userPlan: dataBackUp[1],
+          userAdds: dataBackUp[2],
+        };
+        store.form4(recap);
+        store.backUpForm4(recap);
+        view.stepFour();
         break;
     }
   });
 
   view.bindEventBackBtn((event) => {
-    const { stateForm, form } = store.datas;
-
+    const { stateForm, plans, stateToggMY, addOns, dataBackUp, currPlan } =
+      store.datas;
+    if (stateForm === 0) {
+      return;
+    }
+    view.activateLink(stateForm - 1);
+    store.updateBackState();
     switch (stateForm) {
       case 1:
-        view.stepZero(form[0]);
-        store.updateBackState();
+        const userPlan = document.querySelector(
+          'input[name="subscription"]:checked'
+        ).id;
+        store.backUpForm2(userPlan);
+        view.stepZero(dataBackUp[0]);
+        event.target.remove();
         break;
       case 2:
-        console.log("kembali ke 2");
+        const userAddOns =
+          [...document.querySelectorAll('input[name="add-ons"]:checked')] || [];
+        const addsData = [];
+        userAddOns.forEach((item) => {
+          for (const p in addOns) {
+            if (item.id.toLowerCase() === addOns[p].type.toLowerCase())
+              addsData.push(addOns[p]);
+          }
+        });
+        store.backUpForm3(addsData);
+        view.stepOne(plans, stateToggMY);
+        const checkRadioBtn = document.querySelectorAll(
+          'input[name="subscription"]'
+        );
+        checkRadioBtn.forEach((input) => {
+          if (input.id === dataBackUp[1].userPlan.toLowerCase()) {
+            input.setAttribute("checked", "true");
+          }
+        });
+        const btnToggle = document.querySelector(".toggle-mon-yr div");
+        btnToggle.addEventListener("click", (e) => {
+          store.updateToggle(store.datas.stateToggMY);
+          view.handlerToggleMy(
+            store.datas.plans,
+            store.datas.stateToggMY,
+            btnToggle
+          );
+        });
+        break;
+      case 3:
+        view.stepTwo(addOns);
+        const checkedInput = document.querySelectorAll('input[name="add-ons"]');
+        checkedInput.forEach((input) => {
+          dataBackUp[2].forEach((el) => {
+            if (input.id.toLowerCase() === el.type.toLowerCase()) {
+              input.setAttribute("checked", "true");
+            }
+          });
+        });
         break;
     }
   });
