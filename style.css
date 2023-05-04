@@ -35,6 +35,8 @@ body {
     height: 100vh;
     font-family: 'Ubuntu', sans-serif;
     position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .container {
@@ -172,7 +174,7 @@ form input {
 }
 
 input[type="radio"]:checked~.radio-box {
-    border: 1px solid var(--Purplish-blue);
+    /* border: 1px solid var(--Purplish-blue); */
     background-color: var(--Light-blue);
 }
 
@@ -354,7 +356,8 @@ footer label:active {
 
 @media screen and (min-width:765px) {
     .container {
-        width: 80%;
+        width: 70%;
+        height: 80%;
         margin-inline: auto;
         flex-direction: row;
         background-color: var(--White);
@@ -378,7 +381,33 @@ footer label:active {
     }
 
     main {
+        height: 100%;
         position: static;
+    }
+
+    main form {
+        box-shadow: none;
+    }
+
+    main form:has(.toggle-mon-yr) .test {
+        display: flex;
+        gap: .3em;
+        justify-content: center;
+        height: 170px;
+    }
+
+    .test div {
+        width: 33.3%;
+    }
+
+    .test img {
+        width: 40px;
+    }
+
+    .radio-box:has(img) {
+        flex-direction: column;
+        justify-content: space-between;
+        height: 150px;
     }
 
     .li-text p {
