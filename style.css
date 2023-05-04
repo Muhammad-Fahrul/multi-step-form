@@ -277,7 +277,6 @@ label:has(input[type=checkbox]:checked) {
 
 
 div:has(.finishing-box) {
-    width: 100%;
     display: flex;
     justify-content: space-between;
 }
@@ -351,4 +350,39 @@ footer label:active {
     font-size: .9rem;
     background-color: var(--White);
     color: var(--Marine-blue);
+}
+
+@media screen and (min-width:765px) {
+    .container {
+        width: 80%;
+        margin-inline: auto;
+        flex-direction: row;
+        background-color: var(--White);
+        padding: .5em;
+    }
+
+    aside {
+        width: 30%;
+        height: 100%;
+    }
+
+    aside ul {
+        flex-direction: column;
+        align-items: start;
+
+    }
+
+    aside ul li {
+        display: flex;
+        gap: .3em;
+    }
+
+    main {
+        position: static;
+    }
+
+    .li-text p {
+        display: block;
+    }
+
 }
