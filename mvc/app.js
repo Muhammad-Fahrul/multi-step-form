@@ -24,13 +24,12 @@ function init() {
       return;
     }
     view.activateLink(stateForm + 1);
-
+    store.updateNextState();
     switch (stateForm) {
       case 0:
         const name = document.querySelector('input[name="name"]').value;
         const email = document.querySelector('input[name="email"]').value;
         const phone = document.querySelector('input[name="phone"]').value;
-        store.form1(name, email, phone);
         store.backUpForm1(name, email, phone);
         view.stepOne(plans, stateToggMY);
 
@@ -50,8 +49,6 @@ function init() {
         const userPlan = document.querySelector(
           'input[name="subscription"]:checked'
         ).id;
-
-        store.form2(userPlan);
         store.backUpForm2(userPlan);
         view.stepTwo(addOns);
         const checkedInput = document.querySelectorAll('input[name="add-ons"]');
@@ -93,7 +90,6 @@ function init() {
               return +total + +num;
             }, 0) + +props.fee;
 
-        store.form3(addsData);
         store.backUpForm3(addsData);
         view.stepThree(props, currentAdds, total);
         break;
@@ -103,7 +99,6 @@ function init() {
           userPlan: dataBackUp[1],
           userAdds: dataBackUp[2],
         };
-        store.form4(recap);
         store.backUpForm4(recap);
         view.stepFour();
         break;
@@ -111,8 +106,7 @@ function init() {
   });
 
   view.bindEventBackBtn((event) => {
-    const { stateForm, plans, stateToggMY, addOns, dataBackUp, currPlan } =
-      store.datas;
+    const { stateForm, plans, stateToggMY, addOns, dataBackUp } = store.datas;
     if (stateForm === 0) {
       return;
     }
@@ -159,6 +153,8 @@ function init() {
         break;
       case 3:
         view.stepTwo(addOns);
+        document.querySelector("#btn-form").textContent = "Next step";
+
         const checkedInput = document.querySelectorAll('input[name="add-ons"]');
         checkedInput.forEach((input) => {
           dataBackUp[2].forEach((el) => {

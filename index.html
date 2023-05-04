@@ -55,7 +55,7 @@
       <!-- Step 1 start -->
 
       <main id="main">
-        <form autocomplete="off" id="default-form">
+        <form autocomplete="on" id="default-form">
           <caption>
             <h2>Personal Info</h2>
           </caption>
@@ -72,10 +72,17 @@
             type="email"
             name="email"
             placeholder="e.g. fahrulm900@gmail.com"
+            pattern="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
             required
           />
           <label for="phone">phone</label>
-          <input type="tel" name="phone" placeholder="e.g. 8989898" required />
+          <input
+            type="tel"
+            name="phone"
+            placeholder="e.g. 6281923578768"
+            pattern="[0-9]+"
+            required
+          />
           <input type="submit" id="submit-form" hidden />
         </form>
         <footer>

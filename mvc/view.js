@@ -20,37 +20,37 @@ export default class View {
   }
 
   //render html comp
-  stepZero(userCurrentInfo) {
-    const { name, email, phone } = userCurrentInfo;
-    this.$.form.innerHTML = `<caption>
-    <h2>Personal Info</h2>
-  </caption>
-  <p>Please provide your name, email address, and phone number.</p>
-  <label for="name">Name</label>
-  <input
-    type="text"
-    name="name"
-    placeholder="e.g. Muhammad Fahrul"
-    value="${name}"
-    required
-  />
-  <label for="email">email</label>
-  <input
-    type="email"
-    name="email"
-    placeholder="e.g. fahrulm900@gmail.com"
-    value="${email}"
-    required
-  />
-  <label for="phone">phone</label>
-  <input
-    type="tel"
-    name="phone"
-    placeholder="e.g. 8989898"
-    value="${phone}"
-    required
-  />
-  <input type="submit" id="submit-form" hidden />`;
+
+  htmlForm1(name, email, phone) {
+    return `<caption>
+<h2>Personal Info</h2>
+</caption>
+<p>Please provide your name, email address, and phone number.</p>
+<label for="name">Name</label>
+<input
+type="text"
+name="name"
+placeholder="e.g. Muhammad Fahrul"
+value="${name}"
+required
+/>
+<label for="email">email</label>
+<input
+type="email"
+name="email"
+placeholder="e.g. fahrulm900@gmail.com"
+value="${email}"
+required
+/>
+<label for="phone">phone</label>
+<input
+type="tel"
+name="phone"
+placeholder="e.g. 8989898"
+value="${phone}"
+required
+/>
+<input type="submit" id="submit-form" hidden />`;
   }
 
   htmlForm2(formComp) {
@@ -181,6 +181,11 @@ export default class View {
     return outPut;
   }
 
+  stepZero(userCurrentInfo) {
+    const { name, email, phone } = userCurrentInfo;
+    this.$.form.innerHTML = this.htmlForm1(name, email, phone);
+  }
+
   stepOne(plans, stateToggMY) {
     // rendering html and all functionality
     this.$.form.innerHTML = this.htmlForm2(
@@ -233,6 +238,7 @@ export default class View {
   }
 
   //   Dom helper method
+
   addClass(adding) {
     adding.classList.add("gray");
   }

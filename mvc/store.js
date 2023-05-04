@@ -105,36 +105,9 @@ export default class Store {
     this.#saveState(stateClone);
   }
 
-  form1(name, email, phone) {
+  updateNextState() {
     const stateClone = structuredClone(this.#getState());
-    stateClone.currentForm[0] = {
-      name,
-      email,
-      phone,
-    };
-
-    this.#saveState(stateClone);
-  }
-
-  form2(userPlan) {
-    const stateClone = structuredClone(this.#getState());
-    stateClone.currentForm[1] = {
-      userPlan,
-    };
-
-    this.#saveState(stateClone);
-  }
-
-  form3(userAddOns) {
-    const stateClone = structuredClone(this.#getState());
-    stateClone.currentForm[2] = userAddOns;
-
-    this.#saveState(stateClone);
-  }
-
-  form4(recap) {
-    const stateClone = structuredClone(this.#getState());
-    stateClone.currentForm[3] = recap;
+    stateClone.currentForm.push(1);
 
     this.#saveState(stateClone);
   }
