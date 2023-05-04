@@ -139,7 +139,7 @@ required
               <div>
                 <div class="finishing-box">
                   <span>${props.type}<span>(${props.freq})</span></span>
-                  <a id="change" href="#">Change</a>
+                  <!-- <a id="change" href="#">Change</a> -->
                 </div>
                 <p>${props.fee}/${props.fre}</p>
               </div>
